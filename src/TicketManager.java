@@ -1,5 +1,5 @@
-import java.lang.reflect.Array;
 import java.util.*;
+import java.util.Scanner;
 
 public class TicketManager {
 
@@ -54,32 +54,81 @@ public class TicketManager {
         elements--;
 
     }
-    public Ticket removeById(){
-        System.out.print("Введите id элемента для его удаления : ");
-        long id = insert.nextInt();
-        for(Ticket ticket : ticketList)
-        {
-            if(ticket.getId()!=id)
-                continue;
-            ticketList.remove(ticket);
-            return ticket;
+    public void removeById() {
+        System.out.print("Введите id билета для удаления: ");
+        long id;
+        try {
+            Scanner scanner = null;
+            id = Long.parseLong(scanner.nextLine().trim());
+        } catch (NumberFormatException e) {
+            System.out.println("Некорректный формат id.");
+            return;
         }
-        elements--;
-        return null;
+
+        boolean removed = false;
+        for (Ticket ticket : ticketList) {
+            if (ticket.getId() == id) {
+                ticketList.remove(ticket);
+                System.out.println("Билет с id " + id + " удален.");
+                removed = true;
+                break;
+            }
+        }
+
+        if (!removed) {
+            System.out.println("Билет с id " + id + " не найден.");
+        }
+        
     }
     public Ticket updateById(){
         System.out.print("Введите id элемента, чтобы обновить его : ");
         long id = insert.nextInt();
-        for(Ticket ticket : ticketList)
-        {
-            if(ticket.getId()!=id)
-                continue;
-            ticket.setName();
-            ticket.setPrice();
-            ticket.setType();
-            ticket.setPerson();
-            ticket.setId();
-            return ticket;
+        for(Ticket ticket : ticketList)        {
+            if (ticket.getId() == id) {
+                System.out.print("Введите новое имя билета: ");
+                String name = insert.nextLine().trim();
+                if (!name.isEmpty()) {
+                    ticket.setName();
+                }
+
+                System.out.print("Введите новую цену билета: ");
+                String priceStr = insert.nextLine().trim();
+                if (!priceStr.isEmpty()) {
+                    try {
+                        int price = Integer.parseInt(priceStr);
+                        if (price > 0) {
+                            ticket.setPrice();
+                        } else {
+                            System.out.println("Цена билета должна быть больше нуля.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Некорректный формат цены билета.");
+                    }
+                }
+
+                System.out.print("Введите новый тип билета (VIP, USUAL, BUDGETARY, CHEAP): ");
+                String typeStr = insert.nextLine().trim();
+                if (!typeStr.isEmpty()) {
+                    try {
+                        TicketType type = TicketType.valueOf(typeStr.toUpperCase());
+                        ticket.setType();
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Некорректный тип билета.");
+                    }
+                }
+
+                System.out.print("Введите новый номер паспорта: ");
+                String passportID = insert.nextLine().trim();
+                if (!passportID.isEmpty() && passportID.length() >= 4) {
+                    ticket.getPerson().toString();
+                } else {
+                    System.out.println("Номер паспорта должен содержать не менее 4 символов.");
+                }
+
+                System.out.println("Билет с id " + id + " обновлен.");
+
+                break;
+            }
         }
         return null;
     }
